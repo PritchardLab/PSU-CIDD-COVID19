@@ -24,6 +24,16 @@ and this will run the model with four different transmission rates, evenly distr
 >
 > e.g. `./odesim none -tf 120 -beta 3 4 5 6`
 
+##### -diag
+
+This is a flag that prints out some basic diagnostic info as to who was infecte, who was hospitalized, and who died.  To be used like this:
+
+    `./odesim none -diag`
+
+##### -ph2c
+
+This is the probability that a hospitalized patient (in the acute stage of hospitalization) will at some point in the future need critical care (i.e. ICU care).
+
 
 ##### -tf
 Time at which the ODEs are stopped. Day 1 is Jan 1 2020.  So, if you want to run the simulation through to April 30 2020, you would call

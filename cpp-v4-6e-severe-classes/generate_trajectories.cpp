@@ -19,6 +19,7 @@ extern double* yic;
 extern prms* ppc;
 extern double G_CLO_INTRODUCTION_TIME;
 extern int G_CLO_INTRODUCTION_COUNT;
+extern bool G_B_DIAGNOSTIC_MODE;
 
 //  END  ### ### GLOBAL VARIABLES ### ###
 
@@ -29,7 +30,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
     double tt,rkstep,ttstop,eps,h1,hmin,ttbeforestop;
     int nvar,nok,nbad; //rkqs();
     int i, j;
-    int dim = STARTJ+NUMAC; // this is the dimension of the dynamical system, i.e. the number of equations
+    int dim = STARTK+NUMAC; // this is the dimension of the dynamical system, i.e. the number of equations
     
     
     // NOTE 2020-04-04 : this is still very fast and it prevents an off-by-one-day pseudo-error when the step size is close to 0.5 or 1.0
@@ -83,7 +84,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
             exit(-1);
         }
 
-        if( counter%steps_per_day==0 )
+        if( counter%steps_per_day==0 && !G_B_DIAGNOSTIC_MODE )
         {
             printf("\n%1.3f", tt);
             for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
@@ -100,7 +101,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
 
     //printf("\n\n    %d \n\n", Q );
     
-    delete[] yic;    
+    //delete[] yic;    
     
     //return vv;
 }

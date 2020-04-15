@@ -70,9 +70,14 @@
 // number of J-classes - these are the cumulative symptomatic incidence classes
 #define STARTJ 270
 
+// ### CLASSES THAT KEEP TRACK OF CUMULATIVE HOSPITALIZATION INCIDENCE
+// these are the K-classes 
+#define STARTK 279
+
+
 // number of equations 9 S classes, 54 E-classes, 36 A-classes, 36 I-classes, 9 R-classes, and 9 J-classes
 //
-// NOTE NOTE NOTE TOTAL NUMBER OF EQUATIONS IS 279
+// NOTE NOTE NOTE TOTAL NUMBER OF EQUATIONS IS 288
 
 
 

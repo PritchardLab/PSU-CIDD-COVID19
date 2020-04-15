@@ -21,3 +21,4 @@ Some compartments will have multiple stages.  For example, the exposed class (E)
 | 254-262 | deceased individuals |
 | 263-271 | recovered individuals |
 | 272-280 | cumulative symptomatic incidence by age |
+| 281-289 | cumulative hospitalization incidence by age |

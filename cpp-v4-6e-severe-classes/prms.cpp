@@ -18,6 +18,7 @@ prms::prms()
     v_fraction_crit.insert(  v_fraction_crit.begin(),  NUMAC, 0.0 );
     v_prob_I4_D.insert(  v_prob_I4_D.begin(),  NUMAC, 0.0 );
     v_prob_HA4_D.insert( v_prob_HA4_D.begin(), NUMAC, 0.0 );
+    v_prob_HA_CA.insert( v_prob_HA_CA.begin(), NUMAC, 0.0 );
     v_prob_V_D.insert( v_prob_V_D.begin(), NUMAC, 0.0 );
     v_prob_CA_D.insert( v_prob_CA_D.begin(), NUMAC, 0.0 );
     v_prob_CA_V.insert( v_prob_CA_V.begin(), NUMAC, 0.0 );
@@ -27,6 +28,7 @@ prms::prms()
     assert( v_fraction_crit.size() ==NUMAC );
     assert( v_prob_I4_D.size() ==NUMAC );
     assert( v_prob_HA4_D.size()==NUMAC );
+    assert( v_prob_HA_CA.size()==NUMAC );
     assert( v_prob_V_D.size()==NUMAC );
     assert( v_prob_CA_D.size()==NUMAC );
     assert( v_prob_CA_V.size()==NUMAC );

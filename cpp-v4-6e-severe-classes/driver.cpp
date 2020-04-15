@@ -38,7 +38,10 @@ double G_CLO_INTRODUCTION_TIME;
 int G_CLO_INTRODUCTION_COUNT;
 string G_CLO_LOCATION = "RI";
 
-double G_CLO_TF = 110.0;
+double G_CLO_TF = 365.0;
+double G_CLO_P_HOSP_TO_ICU = 0.30;
+
+bool G_B_DIAGNOSTIC_MODE = false;
 
 // END ### ### GLOBAL VARIABLES ### ###
 
@@ -57,8 +60,8 @@ int main(int argc, char* argv[])
     // ###  1.  ALLOCATE SPACE FOR A PARAMETERS CLASS AND FOR THE MAIN STATE VARIABLES
     //
     ppc = new prms; assert( ppc );
-    yic = new double[STARTJ+NUMAC];
-    for(int i=0;i<STARTJ+NUMAC;i++) yic[i]=0.0; // zero everything out
+    yic = new double[STARTK+NUMAC];
+    for(int i=0;i<STARTK+NUMAC;i++) yic[i]=0.0; // zero everything out
 
 
     // assign some default values to the v_beta and v_betatimes arrays
@@ -131,6 +134,18 @@ int main(int argc, char* argv[])
     ppc->v_prob_I4_D[7] = 0.02;
     ppc->v_prob_I4_D[8] = 0.04;
 
+    // set the probability of progression from the "HA_i" -state to the CA state, for each HA_i stage individually
+    double ph2c = 1.0 - pow( 1.0 - G_CLO_P_HOSP_TO_ICU, ( 1.0/((double)NUMHA) ) );
+    ppc->v_prob_HA_CA[0] = 0.0;
+    ppc->v_prob_HA_CA[1] = 0.0;     // no one under 20 progresses to the ICU from the Hospitalized State
+    ppc->v_prob_HA_CA[2] = ph2c/10.0; 
+    ppc->v_prob_HA_CA[3] = ph2c/10.0;
+    ppc->v_prob_HA_CA[4] = ph2c/5.0;
+    ppc->v_prob_HA_CA[5] = ph2c/2.0;
+    ppc->v_prob_HA_CA[6] = ph2c;
+    ppc->v_prob_HA_CA[7] = ph2c;
+    ppc->v_prob_HA_CA[8] = ph2c;
+
     // set the probability of death for HA4 for all 9 age classes - 
     ppc->v_prob_HA4_D[0] = 0.0;
     ppc->v_prob_HA4_D[1] = 0.0;
@@ -143,8 +158,8 @@ int main(int argc, char* argv[])
     ppc->v_prob_HA4_D[8] = 0.05;
 
     // set the probability of death for CA-individuals for all 9 age classes - 
-    ppc->v_prob_CA_D[0] = 0.125; // these can be set to about .125 for the higher age classes; from the Seattle ICU paper on 24 patients
-    ppc->v_prob_CA_D[1] = 0.125;
+    ppc->v_prob_CA_D[0] = 0.0; // these can be set to about .125 for the higher age classes; from the Seattle ICU paper on 24 patients
+    ppc->v_prob_CA_D[1] = 0.001;
     ppc->v_prob_CA_D[2] = 0.125;
     ppc->v_prob_CA_D[3] = 0.125;
     ppc->v_prob_CA_D[4] = 0.125;
@@ -153,7 +168,7 @@ int main(int argc, char* argv[])
     ppc->v_prob_CA_D[7] = 0.125;
     ppc->v_prob_CA_D[8] = 0.125;
     // set the probability of death for CA-individuals for all 9 age classes - 
-    ppc->v_prob_CA_V[0] = 0.75; // these can be set to about .75 for the higher age classes; from the Seattle ICU paper on 24 patients
+    ppc->v_prob_CA_V[0] = 0.0; // these can be set to about .75 for the higher age classes; from the Seattle ICU paper on 24 patients
     ppc->v_prob_CA_V[1] = 0.75;
     ppc->v_prob_CA_V[2] = 0.75;
     ppc->v_prob_CA_V[3] = 0.75;
@@ -164,8 +179,8 @@ int main(int argc, char* argv[])
     ppc->v_prob_CA_V[8] = 0.75;
 
     // from the Seattle ICU data on 24 patients, this probability is 60% -- obviously, it's a small sample size of older patients
-    ppc->v_prob_V_D[0] = 0.60; 
-    ppc->v_prob_V_D[1] = 0.60;
+    ppc->v_prob_V_D[0] = 0.0; 
+    ppc->v_prob_V_D[1] = 0.001;
     ppc->v_prob_V_D[2] = 0.60;
     ppc->v_prob_V_D[3] = 0.60;
     ppc->v_prob_V_D[4] = 0.60;
@@ -188,7 +203,46 @@ int main(int argc, char* argv[])
 
 
     if( OutFile != NULL ) fclose(OutFile);
+    
+    
+    if( G_B_DIAGNOSTIC_MODE )
+    {
+        int ac;
+        
+        printf("\n\t\t\t\t 0-9 \t\t 10-19  \t 20-29  \t 30-39  \t 40-49  \t 50-59  \t 60-69  \t 70-79  \t 80+ ");
+        printf("\n\tTotal Symp Cases");
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            printf("\t%7d ", (int)(yic[STARTJ + ac]+0.5) );
+        }
+        printf("\n\tTotal Deaths    ");
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            printf("\t%7d ", (int)(yic[STARTD + ac]+0.5) );
+        }
+        printf("\n\tCFR             ");
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            printf("\t%1.3f%%   ", 100.0 * yic[STARTD + ac] / yic[STARTJ + ac]  );
+        }
 
+        printf("\n\n\tTotal Hosp Cases");
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            printf("\t%7d ", (int)(yic[STARTK + ac]+0.5) );
+        }
+        printf("\n\tHosp FR         ");
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            printf("\t%1.1f%%     ", 100.0 * yic[STARTD + ac] / yic[STARTK + ac]  );
+        }
+        
+    
+        printf("\n\n");
+    }
+    
+
+    delete[] yic;
     delete ppc;
     return 0;
 }

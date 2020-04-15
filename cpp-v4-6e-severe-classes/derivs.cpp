@@ -21,7 +21,7 @@ void derivs( double t, double *y, double *dydt)
     double foi=0.0;
     for(i=0; i<NUMAC*NUMI; i++) // you want to loop across all NUMI stages and all NUMAC ages
     {
-        foi += y[STARTI + i];   // STARTI is the starting index of all of the I-classes
+        foi += y[STARTI + i];   // STARTI is the starting index of all of the I-classes //TODO add asymp, some hospitalized
     }
     foi *= ppc->v[i_beta]; // this is the beta parameters
     
@@ -269,16 +269,20 @@ void derivs( double t, double *y, double *dydt)
     
     
     
-    
-    
-    
     // ### 12 ###    CUMULATIVE SYMPTOMATIC INCIDENCE CLASSES
-    //              finally the 9 J-classes
+    //               the 9 J-classes
     for(ac=0;ac<NUMAC;ac++)
     {
         dydt[STARTJ+ac] = (1.0-ppc->v_fraction_asymp[ac]) * tre * y[STARTE + (NUME-1)*NUMAC + ac];
     }
     
+    
+    // ### 13 ###    CUMULATIVE SYMPTOMATIC INCIDENCE CLASSES
+    //               finally the 9 K-classes
+    for(ac=0;ac<NUMAC;ac++)
+    {
+        dydt[STARTK+ac] = ( ppc->v_fraction_hosp[ac] + ppc->v_fraction_crit[ac] ) * tri1 * y[STARTI + NUMAC + ac] ;
+    }
     
     
     

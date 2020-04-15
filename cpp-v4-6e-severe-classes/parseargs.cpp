@@ -23,6 +23,8 @@ extern int G_CLO_INTRODUCTION_COUNT;
 extern FILE* OutFile;
 extern double G_CLO_TF;
 extern string G_CLO_LOCATION;
+extern double G_CLO_P_HOSP_TO_ICU;
+extern bool G_B_DIAGNOSTIC_MODE;
 
 //  END  ### ### GLOBAL VARIABLES ### ###
 
@@ -146,6 +148,19 @@ void ParseArgs(int argc, char **argv)
         {
             G_CLO_LOCATION = argv[++i];
         }
+        // ### 4 ### IF BLOCK FOR PROBABILITY THAT A HOSPITALIZED PATIENT (ACUTE-STAGE) EVER PROGRESSES TO THE ICU
+        //              ( NOTE that this is processed later to calculate the individual-stage probabilities for HA1, HA2, etc that they progress to the ICU )
+        else if( str == "-ph2c" )
+        {
+            G_CLO_P_HOSP_TO_ICU = atof( argv[++i] );
+            assert( G_CLO_P_HOSP_TO_ICU >= 0.0 );
+            assert( G_CLO_P_HOSP_TO_ICU <= 1.0 );
+        }
+        // ### 5 ### IF BLOCK FOR DIAGNOSTIC MODE 
+        else if( str == "-diag" )
+        {
+            G_B_DIAGNOSTIC_MODE = true;
+        }
         // ### FINAL ### IF BLOCK FOR AN UNKNOWN COMMAND-LINE OPTIONS            
  	else
  	{
@@ -173,7 +188,7 @@ void ParseArgs(int argc, char **argv)
 
 void SetLocationData( string loc )
 {
-    for(int i=0;i<STARTJ+NUMAC;i++) yic[i]=0.0; // zero everything out
+    for(int i=0;i<STARTK+NUMAC;i++) yic[i]=0.0; // zero everything out
     
     if( loc=="RI" )
     {

@@ -32,6 +32,7 @@ public:
     vector<double> v_prob_I4_D;         // probability of death for a non-hospitalized person
     
     vector<double> v_prob_HA4_D;        // probability of death on the regular medical-level-of-care hospital floor
+    vector<double> v_prob_HA_CA;        // probability of progressing to the ICU from any of the HA-classes during the acute-phase hospitalization phase
     
     vector<double> v_prob_V_D;          // probability of death if you are on a ventilator
 

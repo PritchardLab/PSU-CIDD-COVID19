@@ -10,7 +10,7 @@
 #define ERRCON 1.89e-4
 
 // NOTE this needs to match the "dim" variable that is calculated at the beginning of the generate_trajectories function
-#define Q 279
+#define Q 288
 
 
 void rkck(double y[],double dydx[],int n,double x,double h, double yout[],
