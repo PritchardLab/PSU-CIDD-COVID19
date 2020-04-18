@@ -21,6 +21,7 @@ extern double G_CLO_INTRODUCTION_TIME;
 extern int G_CLO_INTRODUCTION_COUNT;
 extern bool G_B_DIAGNOSTIC_MODE;
 
+
 //  END  ### ### GLOBAL VARIABLES ### ###
 
 // [[Rcpp::export]]
@@ -90,6 +91,7 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
             for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
             //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
         }
+
         
 	tt += rkstep;
 
@@ -98,6 +100,14 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
     //
     //END OF LOOP INTEGRATING ODEs
     //
+
+    // print out results of the last step
+    if( !G_B_DIAGNOSTIC_MODE )
+    {
+        printf("\n%1.3f", tt);
+        for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
+        //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+    }
 
     //printf("\n\n    %d \n\n", Q );
     

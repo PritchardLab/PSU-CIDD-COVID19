@@ -24,16 +24,37 @@ and this will run the model with four different transmission rates, evenly distr
 >
 > e.g. `./odesim none -tf 120 -beta 3 4 5 6`
 
+
+##### -dev-hosp-young
+
+This is the deviation in the parameter that determines the fraction of <60 individuals that are hospitalized. Default is 1.8.  Do not set this higher than 3.0. 
+
+```diff
+! Recommended prior distribution [0.5 - 2.5]
+```
+
+##### -dev-hosp-old
+
+This is the deviation in the parameter that determines the fraction of >60 individuals that are hospitalized. Default is 1.0.  Do not set this higher than 1.3. 
+
+```diff
+! Recommended prior distribution [0.8 - 1.2]
+```
+
+
 ##### -diag
 
 This is a flag that prints out some basic diagnostic info as to who was infecte, who was hospitalized, and who died.  To be used like this:
 
     `./odesim none -diag`
 
-##### -ph2c
+##### -symp-frac
 
-This is the probability that a hospitalized patient (in the acute stage of hospitalization) will at some point in the future need critical care (i.e. ICU care).
+This is the probability that a 30-39 year-old infected individual will develop symptoms. Default value is 0.25. If you set this higher than 0.325, it will be reset back down to 0.325.
 
+```diff
+! Recommended prior distribution [0.1 - 0.3]
+```
 
 ##### -tf
 Time at which the ODEs are stopped. Day 1 is Jan 1 2020.  So, if you want to run the simulation through to April 30 2020, you would call

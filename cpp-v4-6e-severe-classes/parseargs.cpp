@@ -26,6 +26,10 @@ extern string G_CLO_LOCATION;
 extern double G_CLO_P_HOSP_TO_ICU;
 extern bool G_B_DIAGNOSTIC_MODE;
 
+extern double G_CLO_SYMP_FRAC;
+extern double G_CLO_HOSPFRAC_YOUNG_DEV;
+extern double G_CLO_HOSPFRAC_OLD_DEV;
+
 //  END  ### ### GLOBAL VARIABLES ### ###
 
 
@@ -161,6 +165,45 @@ void ParseArgs(int argc, char **argv)
         {
             G_B_DIAGNOSTIC_MODE = true;
         }
+        else if( str == "-symp-frac" ) // what you're really setting here is the symp fraction for 30-39 year-olds
+        {
+            G_CLO_SYMP_FRAC = atof( argv[++i] );
+            if( G_CLO_SYMP_FRAC > 0.325 ) G_CLO_SYMP_FRAC = 0.325;
+            if( G_CLO_SYMP_FRAC < 0.0 ) G_CLO_SYMP_FRAC = 0.0;
+        }
+        else if( str == "-dev-hosp-young" )
+        {
+            G_CLO_HOSPFRAC_YOUNG_DEV = atof( argv[++i] );
+        }
+        else if( str == "-dev-hosp-old" )
+        {
+            G_CLO_HOSPFRAC_OLD_DEV = atof( argv[++i] );
+        }
+        // ### 6 ### IF PRINT INDICES AND EXIT
+        else if( str == "-printIndices" )
+        {
+            printf("NUMAC %d\n", NUMAC );       // number age groups
+            printf("NUME %d\n", NUME );         // number of Exposed-class
+            printf("STARTE %d\n", STARTE );     // start index of E
+            printf("NUMA %d\n", NUMA );         // Asymptomatic-class
+            printf("STARTA %d\n", STARTA );
+            printf("NUMI %d\n", NUMI );         // I (symptomatic)-class
+            printf("STARTI %d\n", STARTI );
+            printf("NUMHA %d\n", NUMHA );       // Hospotalized Acute-class
+            printf("STARTHA %d\n", STARTHA );
+            printf("STARTCA %d\n", STARTCA );   // Critical care (ICU) Acute-class
+            printf("NUMV %d\n", NUMV );         // mechanical Ventilator-class
+            printf("STARTV %d\n", STARTV );
+            printf("STARTCR %d\n", STARTCR );   // Critical care (ICU) Recovering-class
+            printf("STARTHR %d\n", STARTHR );   // Hospitalized Recovering-class
+            printf("STARTD %d\n", STARTD );   // Dead-class (age-stratified)
+            printf("STARTR %d\n", STARTR );   // Recovered-class (age-stratified)
+            printf("STARTJ %d\n", STARTJ );   // Cumulative I-class (age-stratified)
+            printf("STARTK %d\n", STARTK );   // Cumulative hospitalization incidence-class (age-stratified)
+
+            exit(0);
+        }
+
         // ### FINAL ### IF BLOCK FOR AN UNKNOWN COMMAND-LINE OPTIONS            
  	else
  	{

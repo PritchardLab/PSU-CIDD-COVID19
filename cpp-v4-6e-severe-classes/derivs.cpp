@@ -147,7 +147,7 @@ void derivs( double t, double *y, double *dydt)
             }
             else // meaning this is the HA_2 class or higher
             {
-                dydt[STARTHA + i*NUMAC + ac] = trha*y[STARTHA + (i-1)*NUMAC + ac] - trha * y[STARTHA + i*NUMAC + ac];
+                dydt[STARTHA + i*NUMAC + ac] = (1.0 - ppc->v_prob_HA_CA[ac]) * trha * y[STARTHA + (i-1)*NUMAC + ac] - trha * y[STARTHA + i*NUMAC + ac];
             }
             
         }
@@ -161,7 +161,16 @@ void derivs( double t, double *y, double *dydt)
     {
         for(ac=0;ac<NUMAC;ac++)
         {
-            dydt[STARTCA + ac] = ppc->v_fraction_crit[ac]*tri1*y[STARTI + NUMAC + ac] - trca * y[STARTCA + ac];            
+            dydt[STARTCA + ac] = 0.0;
+            
+            for(int stg=0; stg<NUMHA; stg++)
+            {
+                dydt[STARTCA + ac] += ppc->v_prob_HA_CA[ac] * trha * y[STARTHA + stg*NUMAC + ac];
+            }
+            
+            dydt[STARTCA + ac] += ppc->v_fraction_crit[ac]*tri1*y[STARTI + NUMAC + ac];
+            
+            dydt[STARTCA + ac] -= trca * y[STARTCA + ac];            
         }
     }
     
@@ -261,7 +270,7 @@ void derivs( double t, double *y, double *dydt)
         dydt[STARTR + ac] += (1.0-ppc->v_prob_I4_D[ac]) * tri2 * y[STARTI + (NUMI-1)*NUMAC + ac]; 
 
         // add HA-individuals coming from HA4
-        dydt[STARTR + ac] += (1.0-ppc->v_prob_HA4_D[ac]) * trha * y[STARTHA + (NUMHA-1)*NUMAC + ac];
+        dydt[STARTR + ac] += (1.0 - ppc->v_prob_HA4_D[ac] - ppc->v_prob_HA_CA[ac]) * trha * y[STARTHA + (NUMHA-1)*NUMAC + ac];
         // add HR-individuals coming from HR
         dydt[STARTR + ac] += (1.0-ppc->v_prob_HA4_D[ac]) * trhr * y[STARTHR + ac];
         

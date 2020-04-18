@@ -13,7 +13,7 @@ nrB=dim(B)[1]
 ncB=dim(B)[2]
 
 
-Pop_total = rowSums( B[,2:(ncB-9)] )
+Pop_total = rowSums( B[,2:(ncB-18)] )
 
 
 #par(mfrow=c(3,1))
@@ -21,5 +21,5 @@ Pop_total = rowSums( B[,2:(ncB-9)] )
 #lines( B[2:nrB,1], DeltaJ, col='red' )
 #plot( M[,1], M[,2], ylim=c(0,200), xlim=c(60,110),pch=16 )
 #lines( B[2:nrB,1], DeltaJ, col='red' )
-plot( B[,1], Pop_total, ylim=c(1058000,1060000), xlim=c(60,310),pch=16 )
+plot( B[,1], Pop_total, ylim=c(1059000,1059500), xlim=c(60,310),pch=16 )
 

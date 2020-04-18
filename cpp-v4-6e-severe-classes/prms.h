@@ -47,7 +47,9 @@ public:
     //END --- FOR ALL THE VECTORS ABOVE, THERE ARE NUMAC ENTRIES FOR THE NINE AGE CLASSES
     
     
-    
+    // NOTE THE TWO ARRAYS BELOW MUST BE OF THE SAME LENGTH
+    //      THE "BETATIME" IS THE START-TIME THAT THE CORRESPONDING BETA COMES INTO EFFECT
+    //      THE LAST BETA STAYS IN EFFECT FOREVER ONCE WE HAVE PASSED THE LAST "BETA-TIME"
     vector<double> v_betas;             // these are all the different beta parameters that will change every T time steps
                                         // where the goal is to have T=1 so you have beta changing daily
                                         
