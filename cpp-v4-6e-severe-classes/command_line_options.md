@@ -44,7 +44,7 @@ This is the deviation in the parameter that determines the fraction of >60 indiv
 
 ##### -diag
 
-This is a flag that prints out some basic diagnostic info as to who was infecte, who was hospitalized, and who died.  To be used like this:
+This is a flag that prints out some basic diagnostic info as to who was infected, who was hospitalized, and who died.  To be used like this:
 
     `./odesim none -diag`
 
