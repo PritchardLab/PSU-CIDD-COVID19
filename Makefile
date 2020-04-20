@@ -1,4 +1,4 @@
-.PHONY: all help clean cleanall
+.PHONY: all help clean
 
 SHELL=/usr/bin/env bash -eo pipefail
 
@@ -12,12 +12,7 @@ all:
 	cd cpp-* && ./basic_traj_graph.r
 	mv cpp-*/basic_traj.png outputs/
 
-help: ## Print help message
-	@echo "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s : | sort)"
-
-clean: ## Clean
+clean:
 	$(MAKE) -C cpp-v4-6e-severe-classes clean
-
-cleanall: clean ## Clean all
 
 
