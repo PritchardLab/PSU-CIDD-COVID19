@@ -27,10 +27,18 @@ and this will run the model with four different transmission rates, evenly distr
 
 ##### -dev-hosp-young
 
-This is the deviation in the parameter that determines the fraction of <60 individuals that are hospitalized. Default is 1.8.  Do not set this higher than 3.0. 
+This is the deviation in the parameter that determines the fraction of <20 individuals that are hospitalized. Default is 1.8.  Do not set this higher than 3.0. 
 
 ```diff
 ! Recommended prior distribution [0.5 - 2.5]
+```
+
+##### -dev-hosp-mid
+
+This is the deviation in the parameter that determines the fraction of 20-60 individuals that are hospitalized. Default is 1.0.  Do not set this higher than 3.0. 
+
+```diff
+! Recommended prior distribution [0.1 - 2.0]
 ```
 
 ##### -dev-hosp-old
@@ -41,12 +49,28 @@ This is the deviation in the parameter that determines the fraction of >60 indiv
 ! Recommended prior distribution [0.8 - 1.2]
 ```
 
+##### -dev-ventdeath-mid
+
+This is the deviation in the parameter that determines the fraction of 40-70 individuals that die after being on a ventilator. Default is 0.7.  Do not set this higher than 1.7. 
+
+```diff
+! Recommended prior distribution [0.5 - 1.3]
+```
+
 
 ##### -diag
 
 This is a flag that prints out some basic diagnostic info as to who was infected, who was hospitalized, and who died.  To be used like this:
 
     `./odesim none -diag`
+
+##### -rel-beta-hosp
+
+This is the relative beta, i.e. the relative population mixing paramter, for a hospitalized individual (including ICU and ventilated). Default is 0.2. Must be between 0.0 and 1.0. Note that this beta does not change when social distancing is enforced.
+
+```diff
+! Recommended prior distribution [0.0 - 0.3]
+```
 
 ##### -symp-frac
 

@@ -29,6 +29,9 @@ extern bool G_B_DIAGNOSTIC_MODE;
 extern double G_CLO_SYMP_FRAC;
 extern double G_CLO_HOSPFRAC_YOUNG_DEV;
 extern double G_CLO_HOSPFRAC_OLD_DEV;
+extern double G_CLO_HOSPFRAC_MID_DEV;
+extern double G_CLO_VENTDEATH_MID_DEV;
+extern double G_CLO_RELATIVE_BETA_HOSP;
 
 //  END  ### ### GLOBAL VARIABLES ### ###
 
@@ -153,13 +156,13 @@ void ParseArgs(int argc, char **argv)
             G_CLO_LOCATION = argv[++i];
         }
         // ### 4 ### IF BLOCK FOR PROBABILITY THAT A HOSPITALIZED PATIENT (ACUTE-STAGE) EVER PROGRESSES TO THE ICU
-        //              ( NOTE that this is processed later to calculate the individual-stage probabilities for HA1, HA2, etc that they progress to the ICU )
-        else if( str == "-ph2c" )
+        //     
+        /*else if( str == "-ph2c" )
         {
             G_CLO_P_HOSP_TO_ICU = atof( argv[++i] );
             assert( G_CLO_P_HOSP_TO_ICU >= 0.0 );
             assert( G_CLO_P_HOSP_TO_ICU <= 1.0 );
-        }
+        }*/                                         //NOTE THIS CLO HAS BEEN DEPRECATED
         // ### 5 ### IF BLOCK FOR DIAGNOSTIC MODE 
         else if( str == "-diag" )
         {
@@ -174,10 +177,32 @@ void ParseArgs(int argc, char **argv)
         else if( str == "-dev-hosp-young" )
         {
             G_CLO_HOSPFRAC_YOUNG_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_YOUNG_DEV > 3.0 ) G_CLO_HOSPFRAC_YOUNG_DEV = 3.0;
+            if( G_CLO_HOSPFRAC_YOUNG_DEV < 0.0 ) G_CLO_HOSPFRAC_YOUNG_DEV = 0.0;
+        }
+        else if( str == "-dev-hosp-mid" )
+        {
+            G_CLO_HOSPFRAC_MID_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_MID_DEV > 3.0 ) G_CLO_HOSPFRAC_MID_DEV = 3.0;
+            if( G_CLO_HOSPFRAC_MID_DEV < 0.0 ) G_CLO_HOSPFRAC_MID_DEV = 0.0;
         }
         else if( str == "-dev-hosp-old" )
         {
             G_CLO_HOSPFRAC_OLD_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_OLD_DEV > 1.3 ) G_CLO_HOSPFRAC_OLD_DEV = 1.3;
+            if( G_CLO_HOSPFRAC_OLD_DEV < 0.0 ) G_CLO_HOSPFRAC_OLD_DEV = 0.0;
+        }
+        else if( str == "-dev-ventdeath-mid" )
+        {
+            G_CLO_VENTDEATH_MID_DEV = atof( argv[++i] );
+            if( G_CLO_VENTDEATH_MID_DEV > 1.7 ) G_CLO_VENTDEATH_MID_DEV = 1.7;
+            if( G_CLO_VENTDEATH_MID_DEV < 0.0 ) G_CLO_VENTDEATH_MID_DEV = 0.0;
+        }
+        else if( str == "-rel-beta-hosp" )
+        {
+            G_CLO_RELATIVE_BETA_HOSP = atof( argv[++i] );
+            if( G_CLO_RELATIVE_BETA_HOSP > 1.0 ) G_CLO_RELATIVE_BETA_HOSP = 1.0;
+            if( G_CLO_RELATIVE_BETA_HOSP < 0.0 ) G_CLO_RELATIVE_BETA_HOSP = 0.0;
         }
         // ### 6 ### IF PRINT INDICES AND EXIT
         else if( str == "-printIndices" )

@@ -19,10 +19,47 @@ void derivs( double t, double *y, double *dydt)
     // ### 0 ### compute the force of infection 
     //
     double foi=0.0;
-    for(i=0; i<NUMAC*NUMI; i++) // you want to loop across all NUMI stages and all NUMAC ages
+
+    for(i=NUME+4; i<NUME; i++) // loop through the last two stages of exposed individuals
     {
-        foi += y[STARTI + i];   // STARTI is the starting index of all of the I-classes //TODO add asymp, some hospitalized
+        for(ac=0; ac<NUMAC; ac++)
+        {
+            foi += ppc->v[i_beta] * ppc->v[i_phi_incub] * y[STARTE + i*NUMAC + ac];   // STARTI is the starting index of all of the I-classes 
+        }
     }
+    for(i=0; i<NUMAC*NUMA; i++) // loop through all asymptomatic individuals
+    {
+        foi += ppc->v[i_beta] * ppc->v[i_phi_asymp] * y[STARTA + i];   // STARTI is the starting index of all of the I-classes 
+    }
+    for(i=0; i<NUMAC*NUMI; i++) // you want to loop across all NUMI stages and all NUMAC ages of infected individuals
+    {
+        foi += ppc->v[i_beta] * y[STARTI + i];      // STARTI is the starting index of all of the I-classes 
+    }                                               // no need to multiply by a relative infectiousness parameter because this is 1.0 here (the reference case)
+    for(i=0; i<NUMAC*NUMHA; i++) // loop through all hospitalized individuals
+    {
+        foi += ppc->v[i_beta_hosp] * ppc->v[i_phi_hosp] * y[STARTHA + i];   
+    }
+    for(i=0; i<NUMAC; i++) // loop through all ICU individuals
+    {
+        foi += ppc->v[i_beta_icu] * ppc->v[i_phi_icu] * y[STARTCA + i];   
+    }
+    for(i=0; i<NUMV*NUMAC; i++) // loop through all ventilated individuals
+    {
+        foi += ppc->v[i_beta_vent] * ppc->v[i_phi_vent] * y[STARTV + i];   
+    }
+    for(i=0; i<NUMAC; i++) // loop through all CR individuals
+    {
+        foi += ppc->v[i_beta_icu] * ppc->v[i_phi_icu] * y[STARTCR + i];   
+    }
+    for(i=0; i<NUMAC; i++) // loop through all HR individuals
+    {
+        // foi += ppc->v[i_beta_hosp] * ppc->v[i_phi_hosp] * y[STARTHR + i];    // NOTE this is set to zero-contribution to the FOI right now because        
+    }                                                                           // these individuals are on day 10-15 of their infection, and Wolfel et al (Nature, 2020) suggest that
+                                                                                // positivity by virus-culture should be low by this time 
+    
+    
+    
+    
     foi *= ppc->v[i_beta]; // this is the beta parameters
     
     double popsize=ppc->v[i_N];
