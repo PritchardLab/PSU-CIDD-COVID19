@@ -15,6 +15,7 @@
 
 // BEGIN ### ### GLOBAL VARIABLES ### ###
 
+extern FILE* OutFile;
 extern double* yic;
 extern prms* ppc;
 extern double G_CLO_INTRODUCTION_TIME;
@@ -81,15 +82,26 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
         
         if ( odeint(yic,nvar,tt,tt+rkstep,eps,&h1,hmin,&nok,&nbad, derivs,rkqs) != 1)
       	{
-	    fprintf(stderr, "\n\nEXITING BC OF ERROR IN ODEINT\n\n");
+	        fprintf(stderr, "\n\nEXITING BC OF ERROR IN ODEINT\n\n");
             exit(-1);
         }
 
         if( counter%steps_per_day==0 && !G_B_DIAGNOSTIC_MODE )
         {
-            printf("\n%1.3f", tt);
-            for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
-            //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+            if( OutFile == NULL )
+            {
+                printf("%1.3f", tt);
+                for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
+                //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+                printf("\n");
+            }
+            else
+            {
+                fprintf(OutFile, "%1.3f", tt);
+                for(i=0;i<dim;i++) fprintf(OutFile, "\t%1.4f", yic[i]);
+                //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+                fprintf(OutFile, "\n");
+            }
         }
 
         
@@ -104,9 +116,20 @@ void generate_trajectories( double inital_number_of_cases, double param_beta, do
     // print out results of the last step
     if( !G_B_DIAGNOSTIC_MODE )
     {
-        printf("\n%1.3f", tt);
-        for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
-        //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+        if( OutFile == NULL )
+        {
+            printf("%1.3f", tt);
+            for(i=0;i<dim;i++) printf("\t%1.4f", yic[i]);
+            //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+            printf("\n");
+        }
+        else
+        {
+            fprintf(OutFile, "%1.3f", tt);
+            for(i=0;i<dim;i++) fprintf(OutFile, "\t%1.4f", yic[i]);
+            //for(i=0;i<NUMAC+3;i++) printf("\t%1.4f", yic[i]);
+            fprintf(OutFile, "\n");
+        }
     }
 
     //printf("\n\n    %d \n\n", Q );

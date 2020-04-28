@@ -34,7 +34,7 @@ FILE* OutFile = NULL;
 prms* ppc;  // need to allocate space for this in main
 
 double G_CLO_BETA = 0.3;
-double G_CLO_INTRODUCTION_TIME;
+double G_CLO_INTRODUCTION_TIME = -1;
 int G_CLO_INTRODUCTION_COUNT;
 string G_CLO_LOCATION = "RI";
 
@@ -42,9 +42,11 @@ double G_CLO_TF = 365.0;
 double G_CLO_P_HOSP_TO_ICU = 0.30;
 
 double G_CLO_SYMP_FRAC = 0.25;
-double G_CLO_HOSPFRAC_YOUNG_DEV = 1.8;
-double G_CLO_HOSPFRAC_MID_DEV = 1.0;
-double G_CLO_HOSPFRAC_OLD_DEV = 1.0;
+double G_CLO_HOSPFRAC_YOUNG_DEV = 1.0;
+double G_CLO_HOSPFRAC_MID_DEV = 0.5;
+double G_CLO_HOSPFRAC_OLD_DEV = 0.5;
+
+double G_CLO_ICUFRAC_DEV = 1.0;
 
 double G_CLO_VENTDEATH_MID_DEV = 0.7;
 
@@ -141,8 +143,8 @@ int main(int argc, char* argv[])
     // set the fraction of individuals who are hospitalized immediately after I_2
     //
     double b1 = G_CLO_HOSPFRAC_YOUNG_DEV;   // default is 1.8 :: REASON is that we want these rates to match the hosp-age-dist in the Lewnard paper
-    double b2 = G_CLO_HOSPFRAC_MID_DEV;     // default is 0.3
-    double b3 = G_CLO_HOSPFRAC_OLD_DEV;     // default is 1.0
+    double b2 = G_CLO_HOSPFRAC_MID_DEV;     // default is 
+    double b3 = G_CLO_HOSPFRAC_OLD_DEV;     // default is 
     ppc->v_fraction_hosp[0] = 0.025*b1;     // NOTE all of these numbers are taken directly from the CDC MMRW Mar 27 report
     ppc->v_fraction_hosp[1] = 0.025*b1;
     ppc->v_fraction_hosp[2] = 0.208*b2;
@@ -189,6 +191,14 @@ int main(int argc, char* argv[])
     ppc->v_prob_HA_CA[7] = 1.0 - pow( 1.0 - 0.4835, ( 1.0/((double)NUMHA) ) );
     ppc->v_prob_HA_CA[8] = 1.0 - pow( 1.0 - 0.416,  ( 1.0/((double)NUMHA) ) );
     
+    // the probabilities above range from: 0.07 to 0.16
+    double c1 = G_CLO_ICUFRAC_DEV;
+    for(int ac=0; ac<NUMAC; ac++)
+    {
+        ppc->v_prob_HA_CA[ac] *= c1;
+        //ppc->v_prob_HA_CA[ac] = 0.0;
+    }
+    
     // set the probability of death for HA4 for all 9 age classes - 
     ppc->v_prob_HA4_D[0] = 0.0;
     ppc->v_prob_HA4_D[1] = 0.0;
@@ -215,14 +225,14 @@ int main(int argc, char* argv[])
     // from the Seattle ICU data on 24 patients, this probability is 60% -- obviously, it's a small sample size of older patients
     // these are being set to the ICU-to-Death probabilities since it's very difficult to get good data on death when on and not on a ventilator (for ICU patients)
     //
-    double c = G_CLO_VENTDEATH_MID_DEV; // default set to 1.0
+    double vd = G_CLO_VENTDEATH_MID_DEV; // default set to 1.0
     ppc->v_prob_V_D[0] = 0.03125;       // NOTE set directly from the Lewnard paper; very little data here
     ppc->v_prob_V_D[1] = 0.05119;       // NOTE set directly from the Lewnard paper; very little data here
     ppc->v_prob_V_D[2] = 0.15;          // this range should be between 14% (Lewnard) and 16.7%  (Graselli)
     ppc->v_prob_V_D[3] = 0.15;          // this range should be between 13% (Lewnard) and 17%  (Graselli), but Yang LRM observed 0%
-    ppc->v_prob_V_D[4] = 0.400*c;          // this range should be between 31% and 50%  (Lewnard, Graselli, Yang LRM)
-    ppc->v_prob_V_D[5] = 0.460*c;          // this range should be between 26% and 70%  (Lewnard, Graselli, Yang LRM)
-    ppc->v_prob_V_D[6] = 0.585*c;         // this range should be between 39% and 72%  (Lewnard, Graselli, Yang LRM, Bhatraju) 
+    ppc->v_prob_V_D[4] = 0.400*vd;          // this range should be between 31% and 50%  (Lewnard, Graselli, Yang LRM)
+    ppc->v_prob_V_D[5] = 0.460*vd;          // this range should be between 26% and 70%  (Lewnard, Graselli, Yang LRM)
+    ppc->v_prob_V_D[6] = 0.585*vd;         // this range should be between 39% and 72%  (Lewnard, Graselli, Yang LRM, Bhatraju) 
     ppc->v_prob_V_D[7] = 0.70;          // this range should be between 60% and 88%  (Lewnard, Graselli, Yang LRM, Bhatraju)
     ppc->v_prob_V_D[8] = 0.90;          // this range should be between 60% and 100% (Lewnard, Graselli, Yang LRM, Bhatraju)
 

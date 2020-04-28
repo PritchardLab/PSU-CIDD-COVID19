@@ -43,11 +43,21 @@ This is the deviation in the parameter that determines the fraction of 20-60 ind
 
 ##### -dev-hosp-old
 
-This is the deviation in the parameter that determines the fraction of >60 individuals that are hospitalized. Default is 1.0.  Do not set this higher than 1.3. 
+This is the deviation in the parameter that determines the fraction of >60 cases that are hospitalized. Despite the fact that there are a lot of data to parametrize the hospitalization rates for older individuals, this parameter is not easily identifiable with the reporting rate. This means that hospitalization fractions, in some contexts, may appear low due to outreach and testing in nursing homes or widespread random testing in the community. Default is 0.5.  Do not set this higher than 1.3. 
 
 ```diff
-! Recommended prior distribution [0.8 - 1.2]
+! Recommended prior distribution [0.1 - 1.2]
 ```
+
+
+##### -dev-icu-frac
+
+This is the deviation in the parameter that determines the fraction of hospitalized individuals that are admitted to the ICU. This deviation will apply across all age groups.  Default is 1.0.  If you set this higher than 5.0, it will be reset back down to 5.0 
+
+```diff
+! Recommended prior distribution [0.5 - 1.5]
+```
+
 
 ##### -dev-ventdeath-mid
 
@@ -63,6 +73,11 @@ This is the deviation in the parameter that determines the fraction of 40-70 ind
 This is a flag that prints out some basic diagnostic info as to who was infected, who was hospitalized, and who died.  To be used like this:
 
     `./odesim none -diag`
+
+##### -introday
+
+The introduction day of the first case. Feb 1 2020 is day 32, March 1 2020 is day 61, etc.
+
 
 ##### -rel-beta-hosp
 
@@ -85,4 +100,4 @@ Time at which the ODEs are stopped. Day 1 is Jan 1 2020.  So, if you want to run
 
    `./odesim none -tf 121`
    
-The 'time initial' right now is set to zero, which means that it is set to Jan 1 2020.  Cases are introduced at a fixed time to begin the epidemic.  For now, we can use this fixed time, and I will add a command-line option later to change it.
+The 'time initial' right now is set to zero, which means that it is set to Jan 1 2020.  Cases are introduced via the `-introday` command-line argument.  

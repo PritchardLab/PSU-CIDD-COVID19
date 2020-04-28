@@ -65,6 +65,8 @@ void derivs( double t, double *y, double *dydt)
     double popsize=ppc->v[i_N];
 
     
+    //NOTE the variables below are transitions rate (tr) variables between different compartment types; e.g. trv is the transition rate among V-classes
+    //
     // this is the transition rate among the E-classes 
     double tre = ((double)NUME) / ppc->v[i_len_incub_period];
     
@@ -87,7 +89,7 @@ void derivs( double t, double *y, double *dydt)
     // meaning you have about 10.8 days on a ventilator in the 6 V classes
     double trv = 1.0/1.8;
     
-    double trhr = 0.25; //TODO this is a placeholder; assign this somewhere
+    double trhr = 0.4;  //NOTE BethG says this should be about 2-3 days.
     double trcr = 0.50; //TODO this is a placeholder; assign this somewhere
     
     
@@ -205,7 +207,7 @@ void derivs( double t, double *y, double *dydt)
                 dydt[STARTCA + ac] += ppc->v_prob_HA_CA[ac] * trha * y[STARTHA + stg*NUMAC + ac];
             }
             
-            dydt[STARTCA + ac] += ppc->v_fraction_crit[ac]*tri1*y[STARTI + NUMAC + ac];
+            dydt[STARTCA + ac] += ppc->v_fraction_crit[ac]*tri1*y[STARTI + NUMAC + ac]; //NOTE this should be zero; remember to deprecate this
             
             dydt[STARTCA + ac] -= trca * y[STARTCA + ac];            
         }
