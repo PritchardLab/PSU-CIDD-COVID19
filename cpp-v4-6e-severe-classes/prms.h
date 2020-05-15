@@ -7,7 +7,10 @@
 
 using namespace std;
 
-enum parameter_index {i_N, i_beta, i_startday_beta, i_endday_beta, i_len_incub_period, i_len_symptomatic_infectious_period_phase_1, i_len_symptomatic_infectious_period_phase_2, i_len_medicalfloor_hospital_stay, num_params}; 
+// the i_phi parameters are the relative infectiousness of individuals in that state; the infectiousness of the I1 to I4 classes is assumed to be 1.0
+//
+
+enum parameter_index {i_N, i_beta, i_startday_beta, i_endday_beta, i_beta_hosp, i_beta_icu, i_beta_vent, i_len_incub_period, i_len_symptomatic_infectious_period_phase_1, i_len_symptomatic_infectious_period_phase_2, i_len_medicalfloor_hospital_stay, i_phi_asymp, i_phi_incub, i_phi_hosp, i_phi_icu, i_phi_vent, num_params}; 
 
 typedef enum parameter_index prm_index;
 

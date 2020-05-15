@@ -34,7 +34,7 @@ FILE* OutFile = NULL;
 prms* ppc;  // need to allocate space for this in main
 
 double G_CLO_BETA = 0.3;
-double G_CLO_INTRODUCTION_TIME;
+double G_CLO_INTRODUCTION_TIME = -1;
 int G_CLO_INTRODUCTION_COUNT;
 string G_CLO_LOCATION = "RI";
 
@@ -42,8 +42,15 @@ double G_CLO_TF = 365.0;
 double G_CLO_P_HOSP_TO_ICU = 0.30;
 
 double G_CLO_SYMP_FRAC = 0.25;
-double G_CLO_HOSPFRAC_YOUNG_DEV = 1.8;
-double G_CLO_HOSPFRAC_OLD_DEV = 1.0;
+double G_CLO_HOSPFRAC_YOUNG_DEV = 1.0;
+double G_CLO_HOSPFRAC_MID_DEV = 0.5;
+double G_CLO_HOSPFRAC_OLD_DEV = 0.5;
+
+double G_CLO_ICUFRAC_DEV = 1.0;
+
+double G_CLO_VENTDEATH_MID_DEV = 0.7;
+
+double G_CLO_RELATIVE_BETA_HOSP = 0.2;
 
 bool G_B_DIAGNOSTIC_MODE = false;
 
@@ -100,10 +107,23 @@ int main(int argc, char* argv[])
     //
     // ###  2.  INITIALIZE PARAMETERS - these are the default/starting values
     //
-    ppc->v[ i_len_incub_period ]                            = 6.0;
+    ppc->v[ i_len_incub_period ]                            = 6.0;  // this is an average of the Lauer et al estimate (5.5d) and Backer et al (6.5d)
     ppc->v[ i_len_symptomatic_infectious_period_phase_1 ]   = 7.0;
     ppc->v[ i_len_symptomatic_infectious_period_phase_2 ]   = 7.0;
     ppc->v[ i_len_medicalfloor_hospital_stay ]              = 10.7; //   take from Lewnard et al, survivors only
+    
+    // params below are for relative infectiousness of certain individuals; I1 to I4 individuals have infectiousness = 1.0
+    ppc->v[ i_phi_asymp ] = 0.5;        // set to same value as Imperial college models
+    ppc->v[ i_phi_incub ] = 0.5;        // currently a complete unknown
+    ppc->v[ i_phi_hosp ]  = 1.0;
+    ppc->v[ i_phi_icu ]   = 1.0;
+    ppc->v[ i_phi_vent ]  = 0.1;         // to discuss
+    
+    // params below are for relative contact levels of hospitalized, ICUed, and vented individuals
+    ppc->v[ i_beta_hosp ] = G_CLO_RELATIVE_BETA_HOSP * ppc->v_betas[0];  // these relbeta's should do not change with social distancing measures
+    ppc->v[ i_beta_icu ]  = G_CLO_RELATIVE_BETA_HOSP * ppc->v_betas[0];  // because the contact rate of a hospitalized patient is unaffected by the 
+    ppc->v[ i_beta_vent ] = G_CLO_RELATIVE_BETA_HOSP * ppc->v_betas[0];  // social distancing policies set for health individuals
+    
     
     //for(int ac=0; ac<NUMAC; ac++) ppc->v_fraction_asymp[ac]=0.25;
 
@@ -123,16 +143,17 @@ int main(int argc, char* argv[])
     // set the fraction of individuals who are hospitalized immediately after I_2
     //
     double b1 = G_CLO_HOSPFRAC_YOUNG_DEV;   // default is 1.8 :: REASON is that we want these rates to match the hosp-age-dist in the Lewnard paper
-    double b2 = G_CLO_HOSPFRAC_OLD_DEV;     // default is 1.0
+    double b2 = G_CLO_HOSPFRAC_MID_DEV;     // default is 
+    double b3 = G_CLO_HOSPFRAC_OLD_DEV;     // default is 
     ppc->v_fraction_hosp[0] = 0.025*b1;     // NOTE all of these numbers are taken directly from the CDC MMRW Mar 27 report
     ppc->v_fraction_hosp[1] = 0.025*b1;
-    ppc->v_fraction_hosp[2] = 0.208*b1;
-    ppc->v_fraction_hosp[3] = 0.208*b1;
-    ppc->v_fraction_hosp[4] = 0.246*b1;
-    ppc->v_fraction_hosp[5] = 0.292*b1;
-    ppc->v_fraction_hosp[6] = 0.368*b2;
-    ppc->v_fraction_hosp[7] = 0.511*b2;
-    ppc->v_fraction_hosp[8] = 0.645*b2;
+    ppc->v_fraction_hosp[2] = 0.208*b2;
+    ppc->v_fraction_hosp[3] = 0.208*b2;
+    ppc->v_fraction_hosp[4] = 0.246*b2;
+    ppc->v_fraction_hosp[5] = 0.292*b2;
+    ppc->v_fraction_hosp[6] = 0.368*b3;
+    ppc->v_fraction_hosp[7] = 0.511*b3;
+    ppc->v_fraction_hosp[8] = 0.645*b3;
 
     // TODO deprecate this parameter - this will not be used
     // set the fraction of individuals who are immediately admitted to critical care after I_2
@@ -152,10 +173,10 @@ int main(int argc, char* argv[])
     ppc->v_prob_I4_D[2] = 0.0;
     ppc->v_prob_I4_D[3] = 0.0;
     ppc->v_prob_I4_D[4] = 0.0;
-    ppc->v_prob_I4_D[5] = 0.003;
-    ppc->v_prob_I4_D[6] = 0.01;
-    ppc->v_prob_I4_D[7] = 0.02;
-    ppc->v_prob_I4_D[8] = 0.04;
+    ppc->v_prob_I4_D[5] = 0.0;
+    ppc->v_prob_I4_D[6] = 0.0;
+    ppc->v_prob_I4_D[7] = 0.0;
+    ppc->v_prob_I4_D[8] = 0.0;
 
     // set the probability of progression from the "HA_i" -state to the CA state, for each HA_i stage individually
     // NOTE THIS EQ USED TO CALCULATE NUMBERS BELOW: double ph2c = 1.0 - pow( 1.0 - G_CLO_P_HOSP_TO_ICU, ( 1.0/((double)NUMHA) ) );
@@ -170,14 +191,22 @@ int main(int argc, char* argv[])
     ppc->v_prob_HA_CA[7] = 1.0 - pow( 1.0 - 0.4835, ( 1.0/((double)NUMHA) ) );
     ppc->v_prob_HA_CA[8] = 1.0 - pow( 1.0 - 0.416,  ( 1.0/((double)NUMHA) ) );
     
+    // the probabilities above range from: 0.07 to 0.16
+    double c1 = G_CLO_ICUFRAC_DEV;
+    for(int ac=0; ac<NUMAC; ac++)
+    {
+        ppc->v_prob_HA_CA[ac] *= c1;
+        //ppc->v_prob_HA_CA[ac] = 0.0;
+    }
+    
     // set the probability of death for HA4 for all 9 age classes - 
     ppc->v_prob_HA4_D[0] = 0.0;
     ppc->v_prob_HA4_D[1] = 0.0;
     ppc->v_prob_HA4_D[2] = 0.0;
     ppc->v_prob_HA4_D[3] = 0.0;
     ppc->v_prob_HA4_D[4] = 0.0;
-    ppc->v_prob_HA4_D[5] = 0.004;   // NOTE there are no data right now for these 4 numbers
-    ppc->v_prob_HA4_D[6] = 0.008;
+    ppc->v_prob_HA4_D[5] = 0.0;   // NOTE there are no data right now for these numbers
+    ppc->v_prob_HA4_D[6] = 0.0;
     ppc->v_prob_HA4_D[7] = 0.03;
     ppc->v_prob_HA4_D[8] = 0.05;
 
@@ -196,13 +225,14 @@ int main(int argc, char* argv[])
     // from the Seattle ICU data on 24 patients, this probability is 60% -- obviously, it's a small sample size of older patients
     // these are being set to the ICU-to-Death probabilities since it's very difficult to get good data on death when on and not on a ventilator (for ICU patients)
     //
+    double vd = G_CLO_VENTDEATH_MID_DEV; // default set to 1.0
     ppc->v_prob_V_D[0] = 0.03125;       // NOTE set directly from the Lewnard paper; very little data here
     ppc->v_prob_V_D[1] = 0.05119;       // NOTE set directly from the Lewnard paper; very little data here
     ppc->v_prob_V_D[2] = 0.15;          // this range should be between 14% (Lewnard) and 16.7%  (Graselli)
     ppc->v_prob_V_D[3] = 0.15;          // this range should be between 13% (Lewnard) and 17%  (Graselli), but Yang LRM observed 0%
-    ppc->v_prob_V_D[4] = 0.40;          // this range should be between 31% and 50%  (Lewnard, Graselli, Yang LRM)
-    ppc->v_prob_V_D[5] = 0.46;          // this range should be between 26% and 70%  (Lewnard, Graselli, Yang LRM)
-    ppc->v_prob_V_D[6] = 0.585;         // this range should be between 39% and 72%  (Lewnard, Graselli, Yang LRM, Bhatraju) 
+    ppc->v_prob_V_D[4] = 0.400*vd;          // this range should be between 31% and 50%  (Lewnard, Graselli, Yang LRM)
+    ppc->v_prob_V_D[5] = 0.460*vd;          // this range should be between 26% and 70%  (Lewnard, Graselli, Yang LRM)
+    ppc->v_prob_V_D[6] = 0.585*vd;         // this range should be between 39% and 72%  (Lewnard, Graselli, Yang LRM, Bhatraju) 
     ppc->v_prob_V_D[7] = 0.70;          // this range should be between 60% and 88%  (Lewnard, Graselli, Yang LRM, Bhatraju)
     ppc->v_prob_V_D[8] = 0.90;          // this range should be between 60% and 100% (Lewnard, Graselli, Yang LRM, Bhatraju)
 

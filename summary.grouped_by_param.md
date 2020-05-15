@@ -28,9 +28,9 @@
 |  |  |  |  |  |
 |  *MEAN DURATIONS* |  |  |  |  |
 | Incubation Period   			| 4 days (median) 	| Med: 47yrs 	| Guan et al (2020) NEJM  	| 1099 patients in China, 552 hospitals in 30 provinces |
-|								|					|				|	Hopkins					|  |
-|								|					|				|	Wuhan					|  |
-|								|					|				|	Jacco					|  |
+|								|	5.5d; CV=0.415	|				|	Lauer et al (2020) Ann Intern Med	| estimates here are assuming gamma-distributed incubation period; N=181 patients most with travel to Wuhan |
+|								|	4.8d (median)		|				|	Bi et al medRxiv (Mar 27 2020)	| N=183 with known exposure history |
+|								|	6.5d; CV=0.4				|				|	Backer et al (2020) Eurosurv | estimates here are assuming gamma-distributed incubation period; N=88 patients with past travel to Wuhan |
 | Mean time symptoms to diagnosis    			| 		5.25 days  		| 	28-62 | Song et al (2020) NEJM  | First 28 South Korean patients, Mean Calculated by JRP from supplemental text  | 
 | Mean time symptoms to hospitalization			|		4.64 days		|		? 			| 	Bi et al medRxiv (Mar 26 2020)  |	|
 |												|		9.1 days		| 		? 			|	Qun Li et al (2020) NEJM		| N=189, Wuhan, Jan 2020 |
@@ -39,7 +39,7 @@
 |  											    | 9.5 days (median) 	| 	30-80 			| Yang et al (2020) Lancet Resp Med | 52 critically ill patients Wuhan Jin Yin-tan hospital, Dec-Jan, 13 are under 60 |
 | Mean time symptoms to death					|		20 days			|    	>50 		| 	Wu et al (2020) Nat Med 		| All symp cases from Wuhan through Feb 11 |
 | Mean time symptoms to recovery (non-hosp only)|  		17-22 days 		|	stratified 		|	Bi et al medRxiv (Mar 26 2020) 	|  |
-| Mean time a person is virus-culture positive	|		9 days			| 	30-50 			|	Wolfel et al (2020) Nature		| 9 patients, young to middle-aged professionals; probable 30-50yo |
+| Mean time a person is virus-culture positive	|		9 days			| 	27-58 			|	Wolfel et al (2020) Nature		| 9 patients, young to middle-aged professionals |
 | Median duration from symptoms to radiologic diagnosis | 5 days  | 30-80 | Yang et al (2020) Lancet Resp Med  | 52 critically ill patients Wuhan Jin Yin-tan hospital, Dec-Jan, 13 are under 60 |
 |  |  |  |  |  |
 |  |  |  |  |  |

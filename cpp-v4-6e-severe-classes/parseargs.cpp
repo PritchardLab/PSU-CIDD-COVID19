@@ -29,6 +29,10 @@ extern bool G_B_DIAGNOSTIC_MODE;
 extern double G_CLO_SYMP_FRAC;
 extern double G_CLO_HOSPFRAC_YOUNG_DEV;
 extern double G_CLO_HOSPFRAC_OLD_DEV;
+extern double G_CLO_HOSPFRAC_MID_DEV;
+extern double G_CLO_ICUFRAC_DEV;
+extern double G_CLO_VENTDEATH_MID_DEV;
+extern double G_CLO_RELATIVE_BETA_HOSP;
 
 //  END  ### ### GLOBAL VARIABLES ### ###
 
@@ -71,7 +75,7 @@ void ParseArgs(int argc, char **argv)
     }
     else 
     {
-	OutFile = fopen( argv[1], "w" );
+        OutFile = fopen( argv[1], "w" );
     }
 
     string str;
@@ -142,44 +146,56 @@ void ParseArgs(int argc, char **argv)
             }
                          
         }
-        // ### 2 ### IF BLOCK FOR TIME-FINAL    
-        else if( str == "-tf" )
-        {
-            G_CLO_TF = atof( argv[++i] );
-        }
-        // ### 3 ### IF BLOCK FOR LOCATION
-        else if( str == "-loc" )
-        {
-            G_CLO_LOCATION = argv[++i];
-        }
         // ### 4 ### IF BLOCK FOR PROBABILITY THAT A HOSPITALIZED PATIENT (ACUTE-STAGE) EVER PROGRESSES TO THE ICU
-        //              ( NOTE that this is processed later to calculate the individual-stage probabilities for HA1, HA2, etc that they progress to the ICU )
-        else if( str == "-ph2c" )
+        //     
+        /*else if( str == "-ph2c" )
         {
-            G_CLO_P_HOSP_TO_ICU = atof( argv[++i] );
+            G_CLO_P_HOSP_TO_ICU = atof( argv[++i] );   //NOTE THIS CLO HAS BEEN DEPRECATED
             assert( G_CLO_P_HOSP_TO_ICU >= 0.0 );
             assert( G_CLO_P_HOSP_TO_ICU <= 1.0 );
-        }
-        // ### 5 ### IF BLOCK FOR DIAGNOSTIC MODE 
-        else if( str == "-diag" )
-        {
-            G_B_DIAGNOSTIC_MODE = true;
-        }
-        else if( str == "-symp-frac" ) // what you're really setting here is the symp fraction for 30-39 year-olds
-        {
-            G_CLO_SYMP_FRAC = atof( argv[++i] );
-            if( G_CLO_SYMP_FRAC > 0.325 ) G_CLO_SYMP_FRAC = 0.325;
-            if( G_CLO_SYMP_FRAC < 0.0 ) G_CLO_SYMP_FRAC = 0.0;
-        }
+        }*/                                         
         else if( str == "-dev-hosp-young" )
         {
             G_CLO_HOSPFRAC_YOUNG_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_YOUNG_DEV > 3.0 ) G_CLO_HOSPFRAC_YOUNG_DEV = 3.0;
+            if( G_CLO_HOSPFRAC_YOUNG_DEV < 0.0 ) G_CLO_HOSPFRAC_YOUNG_DEV = 0.0;
+        }
+        else if( str == "-dev-hosp-mid" )
+        {
+            G_CLO_HOSPFRAC_MID_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_MID_DEV > 3.0 ) G_CLO_HOSPFRAC_MID_DEV = 3.0;
+            if( G_CLO_HOSPFRAC_MID_DEV < 0.0 ) G_CLO_HOSPFRAC_MID_DEV = 0.0;
         }
         else if( str == "-dev-hosp-old" )
         {
             G_CLO_HOSPFRAC_OLD_DEV = atof( argv[++i] );
+            if( G_CLO_HOSPFRAC_OLD_DEV > 1.3 ) G_CLO_HOSPFRAC_OLD_DEV = 1.3;
+            if( G_CLO_HOSPFRAC_OLD_DEV < 0.0 ) G_CLO_HOSPFRAC_OLD_DEV = 0.0;
         }
-        // ### 6 ### IF PRINT INDICES AND EXIT
+        else if( str == "-dev-icu-frac" )
+        {
+            G_CLO_ICUFRAC_DEV = atof( argv[++i] );
+            if( G_CLO_ICUFRAC_DEV > 5.0 ) G_CLO_ICUFRAC_DEV = 5.0;
+            if( G_CLO_ICUFRAC_DEV < 0.0 ) G_CLO_ICUFRAC_DEV = 0.0;
+        }
+        else if( str == "-dev-ventdeath-mid" )
+        {
+            G_CLO_VENTDEATH_MID_DEV = atof( argv[++i] );
+            if( G_CLO_VENTDEATH_MID_DEV > 1.7 ) G_CLO_VENTDEATH_MID_DEV = 1.7;
+            if( G_CLO_VENTDEATH_MID_DEV < 0.0 ) G_CLO_VENTDEATH_MID_DEV = 0.0;
+        }
+        else if( str == "-diag" )
+        {
+            G_B_DIAGNOSTIC_MODE = true;
+        }
+        else if( str == "-introday" )
+        {
+            G_CLO_INTRODUCTION_TIME = atof( argv[++i] );
+        }
+        else if( str == "-loc" )
+        {
+            G_CLO_LOCATION = argv[++i];
+        }
         else if( str == "-printIndices" )
         {
             printf("NUMAC %d\n", NUMAC );       // number age groups
@@ -203,13 +219,28 @@ void ParseArgs(int argc, char **argv)
 
             exit(0);
         }
-
+        else if( str == "-rel-beta-hosp" )
+        {
+            G_CLO_RELATIVE_BETA_HOSP = atof( argv[++i] );
+            if( G_CLO_RELATIVE_BETA_HOSP > 1.0 ) G_CLO_RELATIVE_BETA_HOSP = 1.0;
+            if( G_CLO_RELATIVE_BETA_HOSP < 0.0 ) G_CLO_RELATIVE_BETA_HOSP = 0.0;
+        }
+        else if( str == "-symp-frac" ) // what you're really setting here is the symp fraction for 30-39 year-olds
+        {
+            G_CLO_SYMP_FRAC = atof( argv[++i] );
+            if( G_CLO_SYMP_FRAC > 0.325 ) G_CLO_SYMP_FRAC = 0.325;
+            if( G_CLO_SYMP_FRAC < 0.0 ) G_CLO_SYMP_FRAC = 0.0;
+        }
+        else if( str == "-tf" ) // time final
+        {
+            G_CLO_TF = atof( argv[++i] );
+        }
         // ### FINAL ### IF BLOCK FOR AN UNKNOWN COMMAND-LINE OPTIONS            
- 	else
- 	{
- 	    fprintf(stderr, "\n\tUnknown option [%s] on command line.\n\n", argv[i]);
- 	    exit(-1);
- 	}
+        else
+        {
+            fprintf(stderr, "\n\tUnknown option [%s] on command line.\n\n", argv[i]);
+            exit(-1);
+        }
         
             
         
@@ -250,9 +281,11 @@ void SetLocationData( string loc )
         yic[7]  = ppc->v[i_N]   *   .074;   //  70-79
         yic[8]  = ppc->v[i_N]-yic[0]-yic[1]-yic[2]-yic[3]-yic[4]-yic[5]-yic[6]-yic[7];   //  80+
         assert( yic[8] > 0.0 );
-            
-        G_CLO_INTRODUCTION_TIME = 65.0;
-        G_CLO_INTRODUCTION_COUNT = 2;
+
+        // if the introduction time was never set on the command-line, set it to this value
+        if( G_CLO_INTRODUCTION_TIME < 0.0 ) G_CLO_INTRODUCTION_TIME = 55.0;
+        
+        G_CLO_INTRODUCTION_COUNT = 1;
         
     }
     else if( loc=="PA" )

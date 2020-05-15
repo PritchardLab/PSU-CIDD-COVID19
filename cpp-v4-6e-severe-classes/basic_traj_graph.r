@@ -1,3 +1,4 @@
+
 rm(list=ls())
 setwd("/mnt/DDrive/Github/Bio/Projects/covid-19/covid19modeling/cpp-v4-6e-severe-classes")
 
@@ -11,7 +12,7 @@ A = daily[ which(daily$state=='RI'),]
 dthrum = c(0,31,60,91,121,152,182,213,244,274,305,335)
 
 nr = dim(A)[1]
-M = matrix(, nrow = nr, ncol = 4) # columns are daynum, new cases, new negative tests, new deaths,
+M = matrix(, nrow = nr, ncol = 6) # columns are daynum, new cases, new negative tests, new deaths, new hospitalizations
 
 for (r in 1:nr)
 {
@@ -26,13 +27,17 @@ for (r in 1:nr)
     M[nr-r+1,2] = A$positive[r] - A$positive[r+1]
     M[nr-r+1,3] = A$negative[r] - A$negative[r+1]
     M[nr-r+1,4] = A$death[r] - A$death[r+1]
+    M[nr-r+1,5] = A$hospitalizedCumulative[r] - A$hospitalizedCumulative[r+1]
   }
   else
   {
     M[nr-r+1,2] = A$positive[r] - 0
     M[nr-r+1,3] = A$negative[r] - 0
     M[nr-r+1,4] = A$death[r] - 0
+    M[nr-r+1,5] = A$hospitalizedCumulative[r] - 0
   }
+  M[nr-r+1,6] = A$hospitalizedCurrently
+  
   
 }
 
