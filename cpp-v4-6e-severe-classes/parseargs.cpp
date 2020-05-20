@@ -34,6 +34,8 @@ extern double G_CLO_ICUFRAC_DEV;
 extern double G_CLO_VENTDEATH_MID_DEV;
 extern double G_CLO_RELATIVE_BETA_HOSP;
 
+extern double G_CLO_DEV_LEN_HOSPSTAY;
+
 //  END  ### ### GLOBAL VARIABLES ### ###
 
 
@@ -178,6 +180,12 @@ void ParseArgs(int argc, char **argv)
             if( G_CLO_ICUFRAC_DEV > 5.0 ) G_CLO_ICUFRAC_DEV = 5.0;
             if( G_CLO_ICUFRAC_DEV < 0.0 ) G_CLO_ICUFRAC_DEV = 0.0;
         }
+        else if( str == "-dev-len-hospstay" )
+        {
+            G_CLO_DEV_LEN_HOSPSTAY = atof( argv[++i] );
+            if( G_CLO_DEV_LEN_HOSPSTAY > 2.5 ) G_CLO_DEV_LEN_HOSPSTAY = 2.5;
+            if( G_CLO_DEV_LEN_HOSPSTAY < 0.0 ) G_CLO_DEV_LEN_HOSPSTAY = 0.0;
+        }
         else if( str == "-dev-ventdeath-mid" )
         {
             G_CLO_VENTDEATH_MID_DEV = atof( argv[++i] );
@@ -288,9 +296,52 @@ void SetLocationData( string loc )
         G_CLO_INTRODUCTION_COUNT = 1;
         
     }
+    else if( loc=="MA" )
+    {
+        // 2018 est pop is 6,897,212
+        
+
+        // data from https://www.census.gov/data/tables/time-series/demo/popest/2010s-national-total.html
+        ppc->v[i_N] = 6897212.0;
+        yic[0]  = ppc->v[i_N]   *   0.10586466;   //  0-9
+        yic[1]  = ppc->v[i_N]   *   0.12243686;   //  10-19
+        yic[2]  = ppc->v[i_N]   *   0.14498786;   //  20-29
+        yic[3]  = ppc->v[i_N]   *   0.13384234;   //  30-39
+        yic[4]  = ppc->v[i_N]   *   0.12230812;   //  40-49
+        yic[5]  = ppc->v[i_N]   *   0.14064248;   //  50-59
+        yic[6]  = ppc->v[i_N]   *   0.11801015;   //  60-69
+        yic[7]  = ppc->v[i_N]   *   0.06958116;   //  70-79
+        yic[8]  = ppc->v[i_N]-yic[0]-yic[1]-yic[2]-yic[3]-yic[4]-yic[5]-yic[6]-yic[7];   //  80+
+        assert( yic[8] > 0.0 );
+
+        // if the introduction time was never set on the command-line, set it to this value
+        if( G_CLO_INTRODUCTION_TIME < 0.0 ) G_CLO_INTRODUCTION_TIME = 55.0;
+        
+        G_CLO_INTRODUCTION_COUNT = 1;        
+        
+    }
     else if( loc=="PA" )
     {
+        // 2019 est pop is 12,800,721
         
+
+        // proportions from https://www.statista.com/statistics/1022746/rhode-island-population-share-age-group/
+        ppc->v[i_N] = 12800721.0;
+        yic[0]  = ppc->v[i_N]   *   0.11160395;   //  0-9
+        yic[1]  = ppc->v[i_N]   *   0.12229803;   //  10-19
+        yic[2]  = ppc->v[i_N]   *   0.13156525;   //  20-29
+        yic[3]  = ppc->v[i_N]   *   0.12581869;   //  30-39
+        yic[4]  = ppc->v[i_N]   *   0.11809624;   //  40-49
+        yic[5]  = ppc->v[i_N]   *   0.13878546;   //  50-59
+        yic[6]  = ppc->v[i_N]   *   0.1270166;   //  60-69
+        yic[7]  = ppc->v[i_N]   *   0.07657303;   //  70-79
+        yic[8]  = ppc->v[i_N]-yic[0]-yic[1]-yic[2]-yic[3]-yic[4]-yic[5]-yic[6]-yic[7];   //  80+
+        assert( yic[8] > 0.0 );
+
+        // if the introduction time was never set on the command-line, set it to this value
+        if( G_CLO_INTRODUCTION_TIME < 0.0 ) G_CLO_INTRODUCTION_TIME = 62.0;
+        
+        G_CLO_INTRODUCTION_COUNT = 2;        
         
     }
     else

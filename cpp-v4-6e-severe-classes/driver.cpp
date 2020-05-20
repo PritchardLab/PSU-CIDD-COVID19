@@ -46,6 +46,8 @@ double G_CLO_HOSPFRAC_YOUNG_DEV = 1.0;
 double G_CLO_HOSPFRAC_MID_DEV = 0.5;
 double G_CLO_HOSPFRAC_OLD_DEV = 0.5;
 
+double G_CLO_DEV_LEN_HOSPSTAY = 1.0;
+
 double G_CLO_ICUFRAC_DEV = 1.0;
 
 double G_CLO_VENTDEATH_MID_DEV = 0.7;
@@ -110,7 +112,7 @@ int main(int argc, char* argv[])
     ppc->v[ i_len_incub_period ]                            = 6.0;  // this is an average of the Lauer et al estimate (5.5d) and Backer et al (6.5d)
     ppc->v[ i_len_symptomatic_infectious_period_phase_1 ]   = 7.0;
     ppc->v[ i_len_symptomatic_infectious_period_phase_2 ]   = 7.0;
-    ppc->v[ i_len_medicalfloor_hospital_stay ]              = 10.7; //   take from Lewnard et al, survivors only
+    ppc->v[ i_len_medicalfloor_hospital_stay ]              = 10.7 * G_CLO_DEV_LEN_HOSPSTAY; //   take from Lewnard et al, survivors only
     
     // params below are for relative infectiousness of certain individuals; I1 to I4 individuals have infectiousness = 1.0
     ppc->v[ i_phi_asymp ] = 0.5;        // set to same value as Imperial college models
@@ -244,14 +246,14 @@ int main(int argc, char* argv[])
     // very little data here; Seattle study on 24 ICU patients says this should be about 0.125
     //
     ppc->v_prob_CA_D[0] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];         
-    ppc->v_prob_CA_D[1] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];                                     
-    ppc->v_prob_CA_D[2] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];
-    ppc->v_prob_CA_D[3] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];
-    ppc->v_prob_CA_D[4] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];
-    ppc->v_prob_CA_D[5] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];
-    ppc->v_prob_CA_D[6] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];  // 0.146 --- so it's close to the 0.125 obersved in Seattle 24-patent study
-    ppc->v_prob_CA_D[7] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];  // 0.175 --- so it's close to the 0.125 obersved in Seattle 24-patent study
-    ppc->v_prob_CA_D[8] = (1.0-ppc->v_prob_CA_V[0]) * ppc->v_prob_V_D[0];  // 0.225 --- so it's not close to the average of 0.125 obersved in Seattle 24-patent study; but these patients are >80
+    ppc->v_prob_CA_D[1] = (1.0-ppc->v_prob_CA_V[1]) * ppc->v_prob_V_D[1];                                     
+    ppc->v_prob_CA_D[2] = (1.0-ppc->v_prob_CA_V[2]) * ppc->v_prob_V_D[2];
+    ppc->v_prob_CA_D[3] = (1.0-ppc->v_prob_CA_V[3]) * ppc->v_prob_V_D[3];
+    ppc->v_prob_CA_D[4] = (1.0-ppc->v_prob_CA_V[4]) * ppc->v_prob_V_D[4];
+    ppc->v_prob_CA_D[5] = (1.0-ppc->v_prob_CA_V[5]) * ppc->v_prob_V_D[5];
+    ppc->v_prob_CA_D[6] = (1.0-ppc->v_prob_CA_V[6]) * ppc->v_prob_V_D[6];  // 0.146 --- so it's close to the 0.125 obersved in Seattle 24-patent study
+    ppc->v_prob_CA_D[7] = (1.0-ppc->v_prob_CA_V[7]) * ppc->v_prob_V_D[7];  // 0.175 --- so it's close to the 0.125 obersved in Seattle 24-patent study
+    ppc->v_prob_CA_D[8] = (1.0-ppc->v_prob_CA_V[8]) * ppc->v_prob_V_D[8];  // 0.225 --- so it's not close to the average of 0.125 obersved in Seattle 24-patent study; but these patients are >80
     
     
     

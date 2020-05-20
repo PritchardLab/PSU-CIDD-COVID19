@@ -58,6 +58,14 @@ This is the deviation in the parameter that determines the fraction of hospitali
 ! Recommended prior distribution [0.5 - 1.5]
 ```
 
+##### -dev-len-hospstay
+
+This is the deviation in the parameter that determines the length of the typical hospital stay on the medical floor.  Default is 1.0.  If you set this higher than 2.5, it will be reset back down to 2.5 
+
+```diff
+! Recommended prior distribution [0.5 - 2.0]
+```
+
 
 ##### -dev-ventdeath-mid
 
@@ -77,6 +85,15 @@ This is a flag that prints out some basic diagnostic info as to who was infected
 ##### -introday
 
 The introduction day of the first case. Feb 1 2020 is day 32, March 1 2020 is day 61, etc.
+
+
+##### -loc
+
+The location currently being modeled. E.g.
+
+    `./odesim none -loc PA`
+    
+for Pennsylvania. Acceptable arguments currently are PA, MA, and RI.  Default is RI.
 
 
 ##### -rel-beta-hosp

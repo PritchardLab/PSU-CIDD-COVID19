@@ -20,7 +20,7 @@ void derivs( double t, double *y, double *dydt)
     //
     double foi=0.0;
 
-    for(i=NUME+4; i<NUME; i++) // loop through the last two stages of exposed individuals
+    for(i=NUME+4; i<NUME; i++) // loop through the last two stages of exposed individuals -- TODO FIX THIS BUG : no asymptomatic transmission right now
     {
         for(ac=0; ac<NUMAC; ac++)
         {
@@ -57,10 +57,7 @@ void derivs( double t, double *y, double *dydt)
     }                                                                           // these individuals are on day 10-15 of their infection, and Wolfel et al (Nature, 2020) suggest that
                                                                                 // positivity by virus-culture should be low by this time 
     
-    
-    
-    
-    foi *= ppc->v[i_beta]; // this is the beta parameters
+
     
     double popsize=ppc->v[i_N];
 
