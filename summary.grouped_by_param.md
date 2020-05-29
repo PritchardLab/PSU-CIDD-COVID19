@@ -3,7 +3,12 @@
 | Parameter			|	Estimate/Range		|  Age Group |  Reference |  Notes  |
 | -- | -- | -- | -- | -- |
 |  *PROBABILITIES OF PROGRESSION* |  |  |  |  |
-| Percent of infections that are asymptomatic 	|			19.5% 		|		? 				|	Bi et al medRxiv (Mar 26 2020) 	|		do not know if these *never* developed symptoms, or if they were just non-symp at time of assessment |
+| Relative probability of infection by age 		|		  				|   stratified 			|  de Lusignan et al (Lancet ID 2020); GP network; 3802 cases reported and tested btw 1/28 and 4/4  | 0-17: 1.0 / 18-39: 2.83 / 40-64: 5.36 / 65-74: 4.41 / 75+: 5.23; potential collision of contact differences and susceptibility differences | 
+| 										 		|		  				|   stratified 			|  Bi et al (Lancet ID 2020); 391 cases and 1286 close contacts in Shenzhen btw 1/14 and 2/12  | 0-9: 1.0 / 10-19: 0.96 / 20-29: 0.82 / 30-39: 0.81 / 40-49: 0.66 / 50-59: 1.23 / 60-69: 2.08 / 70+: 1.31; only the 60-69 group has CI that are meaningfully different  | 
+| 										 		|		  				|   stratified 			|  Zhang et al (Science 4/29/2020); 136 index cases in Hunan province and 7375 contacts, btw 1/16 and 3/1  | 0-14: 1.00 / 15-64: 2.94 / 65+: 4.32   | 
+|												|						| strat: 0-19,20+		|  Viner et al (medRxiv May 24 2020); meta-analysis including Zhang and Bi studies above | 0-19: 1.0 / 20+ 1.96 for five high quality studies (odds was 2.27 when including all 9 studies)|
+| Percent of infections that are asymptomatic 	|	19.5% (17/87)		|	not stated 			|  Bi et al (Lancet ID 2020); 391 cases and 1286 close contacts in Shenzhen btw 1/14 and 2/12 	|		do not know if these *never* developed symptoms, or if they were just non-symp at time of assessment |
+|												|			17.9%		|	mostly older 		| 	Mizumoto et al (2020) EuroSurv; 634 confirmed cases on Diamond Princess cruise ship | >80% of cases are over 50 |			
 |												|			50%			|		all 			| 	Wu et al (2020) Nat Med 		| All symp cases from Wuhan through Feb 11; param is assumed, robustness testing done |			
 |												|			43%			|	stratified			| 	Thai et al (2020) medRxiv May 16 2020; n=271 positive patients from pool of total quarantined 	| 0-19: 34.4% / 20-39: 46.2% / 40-59: 44.0% / 60-79: 35.0% |			
 | Percent of screened asymptomatic infections that progress to symptomatic  | 100%   | stratified | Wang et al. (2020) JID, Third People’s Hospital of Shenzhen, China screened contacts of known cases to identify asymptomatics| <18: 100% (N=15) / 18-29: 100% (N=1) / 30-49:  100% (N=17) / 50-59: 100% (N=6) / 60+: 100% (N=16) |
